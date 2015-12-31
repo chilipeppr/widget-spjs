@@ -72,6 +72,15 @@ cprequire_test(["inline:com-chilipeppr-widget-template"], function(myWidget) {
     // you only want to have happen during testing, like loading other widgets or
     // doing unit tests. Don't remove end_test at the end or auto-remove will fail.
 
+    // Please note that if you are working on multiple widgets at the same time
+    // you may need to use the ?forcerefresh=true technique in the URL of
+    // your test widget to force the underlying chilipeppr.load() statements
+    // to referesh the cache. For example, if you are working on an Add-On
+    // widget to the Eagle BRD widget, but also working on the Eagle BRD widget
+    // at the same time you will have to make ample use of this technique to
+    // get changes to load correctly. If you keep wondering why you're not seeing
+    // your changes, try ?forcerefresh=true as a get parameter in your URL.
+
     console.log("test running of " + myWidget.id);
 
     $('body').prepend('<div id="testDivForFlashMessageWidget"></div>');
