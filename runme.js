@@ -805,6 +805,12 @@ var generateWidgetDocs = function() {
                   <a target="_blank" href="$pubsub-testurl">$pubsub-testurl</a>
               </td>
           </tr>
+          <tr>
+              <td>Test URL No SSL</td>
+              <td class="pubsub-testurl">
+                  <a target="_blank" href="$pubsub-testurlnossl">$pubsub-testurlnossl (Cloud9 runme.js must be running)</a>
+              </td>
+          </tr>
       </tbody>
   </table>
   
@@ -967,6 +973,8 @@ var generateWidgetDocs = function() {
   var testUrl = 'https://preview.c9users.io/' +
     process.env.C9_USER + '/' +
     process.env.C9_PROJECT + '/widget.html';
+  var testUrlNoSsl = 'http://' + process.env.C9_PROJECT +
+    '-' + process.env.C9_USER + '.c9users.io';
   var editUrl = 'http://ide.c9.io/' +
     process.env.C9_USER + '/' +
     process.env.C9_PROJECT;
@@ -979,6 +987,7 @@ var generateWidgetDocs = function() {
   html = html.replace(/\$pubsub-fiddleurl/g, editUrl);
   html = html.replace(/\$pubsub-github/g, github.url);
   html = html.replace(/\$pubsub-testurl/g, testUrl);
+  html = html.replace(/\$pubsub-testurlnosll/g, testUrlNoSsl);
   
   var cpload = generateCpLoadStmt();
   html = html.replace(/\$cp-load-stmt/g, cpload);
