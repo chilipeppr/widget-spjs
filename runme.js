@@ -1083,7 +1083,7 @@ var generateCpLoadStmt = function() {
     //rawurl += '/master/auto-generated-widget.html';
     
     // create a camel case version of this name. split on dash
-    var arr = id.split(/-/g);
+    var arr = widget.id.replace(/com-chilipeppr/i, "").split(/-/g);
     // now capitalize the first letter of each word
     for (var i in arr) {
       var s = arr[i];
@@ -1094,7 +1094,7 @@ var generateCpLoadStmt = function() {
     
     js = '' +
       '// Inject new div to contain widget, or use an existing div with an ID\n' +
-      '$("body").append(\'<div id="myDiv' + idCamelCase + '"></div>);\n\n' +
+      '$("body").append(' + "'" + '<div id="myDiv' + idCamelCase + '"></div>' + "'" + ');\n\n' +
       'chilipeppr.load(\n' +
       '  "#myDiv' + idCamelCase + '",\n' +
       '  "' + rawurl + '",\n' +
