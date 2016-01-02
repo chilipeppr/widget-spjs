@@ -807,7 +807,7 @@ var generateWidgetDocs = function() {
           </tr>
           <tr>
               <td>Test URL No SSL</td>
-              <td class="pubsub-testurl">
+              <td class="pubsub-testurlnossl">
                   <a target="_blank" href="$pubsub-testurlnossl">$pubsub-testurlnossl</a>
                   <span style="font-size:9px">(Cloud9 runme.js must be running)</span>
               </td>
