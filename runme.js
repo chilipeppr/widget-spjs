@@ -1082,18 +1082,31 @@ var generateCpLoadStmt = function() {
     var rawurl = github.rawurl; //= url.replace(/\/github.com\//i, "/raw.githubusercontent.com/");
     //rawurl += '/master/auto-generated-widget.html';
     
-    js = 'chilipeppr.load(\n' +
-      '  "#myDivWidgetInsertedInto",\n' +
+    // create a camel case version of this name. split on dash
+    var arr = id.split(/-/g);
+    // now capitalize the first letter of each word
+    for (var i in arr) {
+      var s = arr[i];
+      s = s.charAt(0).toUpperCase() + s.slice(1)
+      arr[i] = s;
+    }
+    var idCamelCase = arr.join("");
+    
+    js = '' +
+      '// Inject new div to contain widget, or use an existing div with an ID\n' +
+      '$("body").append(\'<div id="myDiv' + idCamelCase + '"></div>);\n\n' +
+      'chilipeppr.load(\n' +
+      '  "#myDiv' + idCamelCase + '",\n' +
       '  "' + rawurl + '",\n' +
       '  function() {\n' +
-      '    // Callback after widget loaded into #myDivWidgetInsertedInto\n' +
+      '    // Callback after widget loaded into #myDiv' + idCamelCase + '\n' +
       '    cprequire(\n' +
       //'      "inline:com-chilipeppr-widget-yourname", // the id you gave your widget\n' +
       '      ["' + id + '"], // the id you gave your widget\n' +
-      '      function(mywidget) {\n' +
-      '        // Callback that is passed reference to your newly loaded widget\n' +
-      '        console.log("My widget just got loaded.", mywidget);\n' +
-      '        mywidget.init();\n' +
+      '      function(myObj' + idCamelCase + ') {\n' +
+      '        // Callback that is passed reference to the newly loaded widget\n' +
+      '        console.log("' + widget.name + ' just got loaded.", myObj' + idCamelCase + ');\n' +
+      '        myObj' + idCamelCase + '.init();\n' +
       '      }\n' +
       '    );\n' +
       '  }\n' +
