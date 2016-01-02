@@ -1093,13 +1093,14 @@ var generateCpLoadStmt = function() {
     var idCamelCase = arr.join("");
     
     js = '' +
-      '// Inject new div to contain widget, or use an existing div with an ID\n' +
+      '// Inject new div to contain widget or use an existing div with an ID\n' +
       '$("body").append(\'<\' + \'div id="myDiv' + idCamelCase + '"><\' + \'/div>\');\n\n' +
       'chilipeppr.load(\n' +
       '  "#myDiv' + idCamelCase + '",\n' +
       '  "' + rawurl + '",\n' +
       '  function() {\n' +
       '    // Callback after widget loaded into #myDiv' + idCamelCase + '\n' +
+      '    // Now use require.js to get reference to instantiated widget\n' +
       '    cprequire(\n' +
       //'      "inline:com-chilipeppr-widget-yourname", // the id you gave your widget\n' +
       '      ["' + id + '"], // the id you gave your widget\n' +

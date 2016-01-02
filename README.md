@@ -28,7 +28,7 @@ Javascript. Then you use cprequire() to find your widget's Javascript and get
 back the instance of it.
 
 ```javascript
-// Inject new div to contain widget, or use an existing div with an ID
+// Inject new div to contain widget or use an existing div with an ID
 $("body").append('<' + 'div id="myDivWidgetTemplate"><' + '/div>');
 
 chilipeppr.load(
@@ -36,6 +36,7 @@ chilipeppr.load(
   "http://raw.githubusercontent.com/chilipeppr/widget-template/master/auto-generated-widget.html",
   function() {
     // Callback after widget loaded into #myDivWidgetTemplate
+    // Now use require.js to get reference to instantiated widget
     cprequire(
       ["inline:com-chilipeppr-widget-template"], // the id you gave your widget
       function(myObjWidgetTemplate) {
