@@ -69,6 +69,7 @@ cprequire_test(["inline:com-chilipeppr-widget-template"], function(myWidget) {
     // init my widget
     myWidget.init();
     $('#com-chilipeppr-widget-template').css('padding', '10px;');
+    $('title').html(myWidget.name);
 
 } /*end_test*/ );
 
