@@ -987,7 +987,7 @@ var generateWidgetDocs = function() {
   html = html.replace(/\$pubsub-url/g, github.rawurl);
   html = html.replace(/\$pubsub-fiddleurl/g, editUrl);
   html = html.replace(/\$pubsub-github/g, github.url);
-  html = html.replace(/\$pubsub-testurlnosll/g, testUrlNoSsl);
+  html = html.replace(/\$pubsub-testurlnossl/g, testUrlNoSsl);
   html = html.replace(/\$pubsub-testurl/g, testUrl);
   
   var cpload = generateCpLoadStmt();
