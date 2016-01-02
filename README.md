@@ -29,7 +29,7 @@ back the instance of it.
 
 ```javascript
 // Inject new div to contain widget, or use an existing div with an ID
-$("body").append('<div id="myDivWidgetTemplate"></div>');
+$("body").append('<' + 'div id="myDivWidgetTemplate"><' + '/div>');
 
 chilipeppr.load(
   "#myDivWidgetTemplate",

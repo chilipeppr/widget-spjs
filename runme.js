@@ -1094,7 +1094,7 @@ var generateCpLoadStmt = function() {
     
     js = '' +
       '// Inject new div to contain widget, or use an existing div with an ID\n' +
-      '$("body").append(' + "'" + '<div id="myDiv' + idCamelCase + '"></div>' + "'" + ');\n\n' +
+      '$("body").append(\'<\' + \'div id="myDiv' + idCamelCase + '"><\' + \'/div>\');\n\n' +
       'chilipeppr.load(\n' +
       '  "#myDiv' + idCamelCase + '",\n' +
       '  "' + rawurl + '",\n' +
