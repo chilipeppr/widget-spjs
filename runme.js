@@ -808,7 +808,8 @@ var generateWidgetDocs = function() {
           <tr>
               <td>Test URL No SSL</td>
               <td class="pubsub-testurl">
-                  <a target="_blank" href="$pubsub-testurlnossl">$pubsub-testurlnossl (Cloud9 runme.js must be running)</a>
+                  <a target="_blank" href="$pubsub-testurlnossl">$pubsub-testurlnossl</a>
+                  <span style="font-size:9px">(Cloud9 runme.js must be running)</span>
               </td>
           </tr>
       </tbody>
@@ -986,8 +987,8 @@ var generateWidgetDocs = function() {
   html = html.replace(/\$pubsub-url/g, github.rawurl);
   html = html.replace(/\$pubsub-fiddleurl/g, editUrl);
   html = html.replace(/\$pubsub-github/g, github.url);
-  html = html.replace(/\$pubsub-testurl/g, testUrl);
   html = html.replace(/\$pubsub-testurlnosll/g, testUrlNoSsl);
+  html = html.replace(/\$pubsub-testurl/g, testUrl);
   
   var cpload = generateCpLoadStmt();
   html = html.replace(/\$cp-load-stmt/g, cpload);
