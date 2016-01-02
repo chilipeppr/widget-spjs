@@ -975,7 +975,7 @@ var generateWidgetDocs = function() {
     process.env.C9_USER + '/' +
     process.env.C9_PROJECT + '/widget.html';
   var testUrlNoSsl = 'http://' + process.env.C9_PROJECT +
-    '-' + process.env.C9_USER + '.c9users.io';
+    '-' + process.env.C9_USER + '.c9users.io/widget.html';
   var editUrl = 'http://ide.c9.io/' +
     process.env.C9_USER + '/' +
     process.env.C9_PROJECT;
