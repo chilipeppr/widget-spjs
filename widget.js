@@ -89,7 +89,7 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
         url: "http://fiddle.jshell.net/chilipeppr/vetj5fvx/show/light/",
         fiddleurl: "http://jsfiddle.net/chilipeppr/vetj5fvx/",
         name: "Widget / Serial Port JSON Server",
-        desc: "This widget shows your available serial ports. It must connect with your local serial port Ajax server that ChiliPeppr provides for Windows, Mac, and Linux.",
+        desc: "The essential widget if you want your workspace to talk to the Serial Port JSON Server (SPJS). This widget enables numerous pubsub signals so you can publish to SPJS and receive data back when you subscribe to the appropriate signals.",
         publish: {
             '/list' : "Sends the list of serial ports shown in this widget including the connect state so other widgets/elements in ChiliPeppr can use the list including knowing what serial ports to send/recv from. Send in /getList and get back a /list with the JSON payload of the list.", 
             '/listAfterMetaDataAdded' : "Similar to /list but the list will have meta data added to it like an image, or default baud rates, or a modified friendly name. It may even be marked as deleted for dual port scenarios where a port may be considered the 2nd port.", 
