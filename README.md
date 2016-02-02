@@ -14,10 +14,10 @@ not conflict with other ChiliPeppr widgets.
 | ID                    | com-chilipeppr-widget-serialport |
 | Name                  | Widget / Serial Port JSON Server |
 | Description           | The essential widget if you want your workspace to talk to the Serial Port JSON Server (SPJS). This widget enables numerous pubsub signals so you can publish to SPJS and receive data back when you subscribe to the appropriate signals. |
-| chilipeppr.load() URL | http://raw.githubusercontent.com/raykholo/widget-spjs/master/auto-generated-widget.html |
-| Edit URL              | http://ide.c9.io/raykholo/widget-spjs |
-| Github URL            | http://github.com/raykholo/widget-spjs |
-| Test URL              | https://preview.c9users.io/raykholo/widget-spjs/widget.html |
+| chilipeppr.load() URL | http://raw.githubusercontent.com/chilipeppr/widget-spjs/master/auto-generated-widget.html |
+| Edit URL              | http://ide.c9.io/chilipeppr/widget-spjs |
+| Github URL            | http://github.com/chilipeppr/widget-spjs |
+| Test URL              | https://preview.c9users.io/chilipeppr/widget-spjs/widget.html |
 
 ## Example Code for chilipeppr.load() Statement
 
@@ -30,7 +30,7 @@ back the instance of it.
 ```javascript
 chilipeppr.load(
   "#myDivWidgetInsertedInto",
-  "http://raw.githubusercontent.com/raykholo/widget-spjs/master/auto-generated-widget.html",
+  "http://raw.githubusercontent.com/chilipeppr/widget-spjs/master/auto-generated-widget.html",
   function() {
     // Callback after widget loaded into #myDivWidgetInsertedInto
     cprequire(
