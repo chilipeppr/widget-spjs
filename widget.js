@@ -80,6 +80,8 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     }
     testStatus();
     
+    $('body').css("padding", "20px");
+
 } /*end_test*/ );
 
 cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquerycookie"], function () {
