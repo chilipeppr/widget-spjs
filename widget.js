@@ -37,6 +37,9 @@ requirejs.config({
 // Test this element. This code is auto-removed by the chilipeppr.load()
 cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     console.log("test running of " + sp.id);
+    
+    $('body').css("padding", "20px");
+
     //sp.init("192.168.1.7");
     /*
     sp.setSingleSelectMode();
@@ -116,7 +119,6 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     }
     testStatus();
     
-    //$('body').css("padding", "20px");
 
 } /*end_test*/ );
 
