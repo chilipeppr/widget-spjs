@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 
@@ -14,6 +15,7 @@
     <script type='text/javascript' src="//i2dcui.appspot.com/js/require.js"></script>
 
     <style type='text/css'>
+<<<<<<< HEAD
 .com-chilipeppr-widget-serialport .com-chilipeppr-widget-serialport-body {
     padding:0;
     overflow: auto;
@@ -189,10 +191,59 @@
 .com-chilipeppr-widget-serialport .deviceImgTd {
     padding:0;
 }
+=======
+/* CSS for ChiliPeppr Widget */
+
+#com-chilipeppr-widget-template {
+   
+}
+
+#com-chilipeppr-widget-template .nav-tabs>li>a {
+    padding: 2px 6px;
+}
+
+>>>>>>> dad1864eb61bb9e3031f6bbbea12bfcbea2812d1
+
     </style>
 
     <script type='text/javascript'>
     //<![CDATA[
+/* global requirejs cprequire cpdefine chilipeppr */
+// Defining the globals above helps Cloud9 not show warnings for those variables
+
+// ChiliPeppr Widget/Element Javascript
+
+requirejs.config({
+    /*
+    Dependencies can be defined here. ChiliPeppr uses require.js so
+    please refer to http://requirejs.org/docs/api.html for info.
+    
+    Most widgets will not need to define Javascript dependencies.
+    
+    Make sure all URLs are https and http accessible. Try to use URLs
+    that start with // rather than http:// or https:// so they simply
+    use whatever method the main page uses.
+    
+    Also, please make sure you are not loading dependencies from different
+    URLs that other widgets may already load like jquery, bootstrap,
+    three.js, etc.
+    
+    You may slingshot content through ChiliPeppr's proxy URL if you desire
+    to enable SSL for non-SSL URL's. ChiliPeppr's SSL URL is
+    https://i2dcui.appspot.com which is the SSL equivalent for
+    http://chilipeppr.com
+    */
+    paths: {
+        // Example of how to define the key (you make up the key) and the URL
+        // Make sure you DO NOT put the .js at the end of the URL
+        // SmoothieCharts: '//smoothiecharts.org/smoothie',
+    },
+    shim: {
+        // See require.js docs for how to define dependencies that
+        // should be loaded before your script/widget.
+    }
+});
+
 // Test this element. This code is auto-removed by the chilipeppr.load()
 cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     console.log("test running of " + sp.id);
@@ -275,17 +326,19 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     }
     testStatus();
     
+    $('body').css("padding", "20px");
+
 } /*end_test*/ );
 
 cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquerycookie"], function () {
     return {
         id: "com-chilipeppr-widget-serialport",
-        url: "http://raw.githubusercontent.com/raykholo/widget-spjs/master/auto-generated-widget.html",       // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
-        fiddleurl: "http://ide.c9.io/raykholo/widget-spjs", // The edit URL. This can be auto-filled by runme.js in Cloud9 if you'd like, or just define it on your own to help people know where they can edit/fork your widget
-        githuburl: "http://github.com/raykholo/widget-spjs", // The backing github repo
-        testurl: "http://widget-spjs-raykholo.c9users.io/widget.html",   // The standalone working widget so can view it working by itself
         name: "Widget / Serial Port JSON Server",
         desc: "The essential widget if you want your workspace to talk to the Serial Port JSON Server (SPJS). This widget enables numerous pubsub signals so you can publish to SPJS and receive data back when you subscribe to the appropriate signals.",
+        url: "http://raw.githubusercontent.com/chilipeppr/widget-spjs/master/auto-generated-widget.html",       // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
+        fiddleurl: "http://ide.c9.io/chilipeppr/widget-spjs", // The edit URL. This can be auto-filled by runme.js in Cloud9 if you'd like, or just define it on your own to help people know where they can edit/fork your widget
+        githuburl: "http://github.com/chilipeppr/widget-spjs", // The backing github repo
+        testurl: "http://widget-spjs-chilipeppr.c9users.io/widget.html",   // The standalone working widget so can view it working by itself
         publish: {
             '/list' : "Sends the list of serial ports shown in this widget including the connect state so other widgets/elements in ChiliPeppr can use the list including knowing what serial ports to send/recv from. Send in /getList and get back a /list with the JSON payload of the list.", 
             '/listAfterMetaDataAdded' : "Similar to /list but the list will have meta data added to it like an image, or default baud rates, or a modified friendly name. It may even be marked as deleted for dual port scenarios where a port may be considered the 2nd port.", 
@@ -2454,11 +2507,12 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             //$(topCssSelector + ' .fork').prop('href', this.fiddleurl);
             //$(topCssSelector + ' .standalone').prop('href', this.url);
             //$(topCssSelector + ' .fork-name').html(this.id);
+
             $(topCssSelector + ' .panel-title').popover({
                 title: this.name,
                 content: this.desc,
                 html: true,
-                delay: 200,
+                delay: 1000,
                 animation: true,
                 trigger: 'hover',
                 placement: 'auto'
@@ -2467,11 +2521,12 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             // load the pubsub viewer / fork element which decorates our upper right pulldown
             // menu with the ability to see the pubsubs from this widget and the forking links
             var that = this;
-            chilipeppr.load("http://fiddle.jshell.net/chilipeppr/zMbL9/show/light/", function () {
-                require(['inline:com-chilipeppr-elem-pubsubviewer'], function (pubsubviewer) {
-                    pubsubviewer.attachTo($('.com-chilipeppr-widget-serialport .panel-heading .dropdown-menu'), that);
+            chilipeppr.load("http://fiddle.jshell.net/chilipeppr/zMbL9/show/light/", function() {
+                require(['inline:com-chilipeppr-elem-pubsubviewer'], function(pubsubviewer) {
+                    pubsubviewer.attachTo($(topCssSelector + ' .panel-heading .dropdown-menu'), that);
                 });
             });
+
         },
 
     }
@@ -2921,3 +2976,97 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
 </body>
 
 </html>
+=======
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <title><!--(auto-fill by runme.js--></title>
+
+    <!-- ChiliPeppr is based on bootstrap CSS. -->
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Customized version of require.js for ChiliPeppr. Please see require.js docs for how
+    ChiliPeppr's dependency system works as it's based on require.js. -->
+    <script type='text/javascript' src="//i2dcui.appspot.com/js/require.js"></script>
+
+    <!-- widget.css DON'T REMOVE -->
+    <style type='text/css'>
+        /* widget.css will get inlined here by runme.js. don't remove this comment or inlining will fail. */
+    </style>
+    <link rel="stylesheet" type="text/css" href="widget.css">
+    <!-- DON'T REMOVE end widget.css -->
+
+    <!-- widget.js DON'T REMOVE -->
+    <script type='text/javascript'>
+        //<![CDATA[
+        /* widget.js will get inlined here by runme.js. don't remove this comment or inlining will fail. */
+        //]]>
+    </script>
+    <script type='text/javascript' src="widget.js"></script>
+    <!-- DON'T REMOVE end widget.js -->
+
+</head>
+
+<body>
+    <div id="com-chilipeppr-widget-template" class="panel panel-default">
+        <div class="panel-heading ">
+
+            <div class="btn-toolbar pull-right" role="toolbar">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-default btn-sayhello" data-delay="1000" data-animation="true" data-placement="auto" data-container="body" data-trigger="hover" data-title="Say Hello" data-content="Generate a hello message">Say Hello
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-xs btn-default hidebody"><span class="glyphicon glyphicon-chevron-up"></span>
+                    </button>
+                </div>
+                <div class="btn-group">
+                    <div class="dropdown">
+                        <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+                    </div>
+                </div>
+            </div> <span class="panel-title" data-toggle="popover">Template Widget</span> <span style="font-size:9px;" class="fb-build">v1</span>
+
+        </div>
+        <div class="panel-body">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#com-chilipeppr-widget-template-tab1" role="tab" data-toggle="tab">Tab 1</a>
+                </li>
+                <li><a href="#com-chilipeppr-widget-template-tab2" role="tab" data-toggle="tab">Tab 2</a></li>
+                <li><a href="#com-chilipeppr-widget-template-tab3" role="tab" data-toggle="tab">Tab 3</a></li>
+            </ul>
+            <!-- Tab panes -->
+
+            <!-- Tab 1 -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="com-chilipeppr-widget-template-tab1">
+                    <p>This is the content of tab 1.</p>
+                    <div class="">
+                        <button type="button" class="btn btn-xs btn-default btn-helloworld2" style="margin: 4px 0;">Hello World 2</button>
+                    </div>
+                </div>
+
+                <!-- Tab 2 -->
+                <div class="tab-pane" id="com-chilipeppr-widget-template-tab2">
+                    <p>This is the content of tab 2.</p>
+                </div>
+
+                <!-- Tab 3 -->
+                <div class="tab-pane" id="com-chilipeppr-widget-template-tab3">
+                    <p>This is the content of tab 3.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+>>>>>>> dad1864eb61bb9e3031f6bbbea12bfcbea2812d1

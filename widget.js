@@ -1,3 +1,39 @@
+/* global requirejs cprequire cpdefine chilipeppr */
+// Defining the globals above helps Cloud9 not show warnings for those variables
+
+// ChiliPeppr Widget/Element Javascript
+
+requirejs.config({
+    /*
+    Dependencies can be defined here. ChiliPeppr uses require.js so
+    please refer to http://requirejs.org/docs/api.html for info.
+    
+    Most widgets will not need to define Javascript dependencies.
+    
+    Make sure all URLs are https and http accessible. Try to use URLs
+    that start with // rather than http:// or https:// so they simply
+    use whatever method the main page uses.
+    
+    Also, please make sure you are not loading dependencies from different
+    URLs that other widgets may already load like jquery, bootstrap,
+    three.js, etc.
+    
+    You may slingshot content through ChiliPeppr's proxy URL if you desire
+    to enable SSL for non-SSL URL's. ChiliPeppr's SSL URL is
+    https://i2dcui.appspot.com which is the SSL equivalent for
+    http://chilipeppr.com
+    */
+    paths: {
+        // Example of how to define the key (you make up the key) and the URL
+        // Make sure you DO NOT put the .js at the end of the URL
+        // SmoothieCharts: '//smoothiecharts.org/smoothie',
+    },
+    shim: {
+        // See require.js docs for how to define dependencies that
+        // should be loaded before your script/widget.
+    }
+});
+
 // Test this element. This code is auto-removed by the chilipeppr.load()
 cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     console.log("test running of " + sp.id);
@@ -87,12 +123,12 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
 cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquerycookie"], function () {
     return {
         id: "com-chilipeppr-widget-serialport",
+        name: "Widget / Serial Port JSON Server",
+        desc: "The essential widget if you want your workspace to talk to the Serial Port JSON Server (SPJS). This widget enables numerous pubsub signals so you can publish to SPJS and receive data back when you subscribe to the appropriate signals.",
         url: "(auto fill by runme.js)",       // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
         fiddleurl: "(auto fill by runme.js)", // The edit URL. This can be auto-filled by runme.js in Cloud9 if you'd like, or just define it on your own to help people know where they can edit/fork your widget
         githuburl: "(auto fill by runme.js)", // The backing github repo
         testurl: "(auto fill by runme.js)",   // The standalone working widget so can view it working by itself
-        name: "Widget / Serial Port JSON Server",
-        desc: "The essential widget if you want your workspace to talk to the Serial Port JSON Server (SPJS). This widget enables numerous pubsub signals so you can publish to SPJS and receive data back when you subscribe to the appropriate signals.",
         publish: {
             '/list' : "Sends the list of serial ports shown in this widget including the connect state so other widgets/elements in ChiliPeppr can use the list including knowing what serial ports to send/recv from. Send in /getList and get back a /list with the JSON payload of the list.", 
             '/listAfterMetaDataAdded' : "Similar to /list but the list will have meta data added to it like an image, or default baud rates, or a modified friendly name. It may even be marked as deleted for dual port scenarios where a port may be considered the 2nd port.", 
@@ -2261,11 +2297,12 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             //$(topCssSelector + ' .fork').prop('href', this.fiddleurl);
             //$(topCssSelector + ' .standalone').prop('href', this.url);
             //$(topCssSelector + ' .fork-name').html(this.id);
+
             $(topCssSelector + ' .panel-title').popover({
                 title: this.name,
                 content: this.desc,
                 html: true,
-                delay: 200,
+                delay: 1000,
                 animation: true,
                 trigger: 'hover',
                 placement: 'auto'
@@ -2274,11 +2311,12 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             // load the pubsub viewer / fork element which decorates our upper right pulldown
             // menu with the ability to see the pubsubs from this widget and the forking links
             var that = this;
-            chilipeppr.load("http://fiddle.jshell.net/chilipeppr/zMbL9/show/light/", function () {
-                require(['inline:com-chilipeppr-elem-pubsubviewer'], function (pubsubviewer) {
-                    pubsubviewer.attachTo($('.com-chilipeppr-widget-serialport .panel-heading .dropdown-menu'), that);
+            chilipeppr.load("http://fiddle.jshell.net/chilipeppr/zMbL9/show/light/", function() {
+                require(['inline:com-chilipeppr-elem-pubsubviewer'], function(pubsubviewer) {
+                    pubsubviewer.attachTo($(topCssSelector + ' .panel-heading .dropdown-menu'), that);
                 });
             });
+
         },
 
     }
