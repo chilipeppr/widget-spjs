@@ -244,7 +244,7 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     
     sp.init({
       isSingleSelectMode: true,
-      defaultBuffer: "timed",
+      defaultBuffer: "nodemcu",
       defaultBaud: 9600,
       bufferEncouragementMsg: 'For your NodeMCU device please choose the "timed" buffer in the pulldown and a 9600 baud rate before connecting.'
     });
@@ -2689,7 +2689,26 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
 
                                     <a name="com-chilipeppr-widget-serialport-download"></a>
                                     <p style="padding-top:16px;font-weight:bold;">Downloads</p>
-                                    <!-- v1.83 -->
+                                
+                                    <!-- v1.88 -->
+                                    <p style="padding:0 0 12px 0;">Version 1.88
+                                        <br/> Build date: Feb 6, 2015
+                                        <br/> Nodemcu buffer. Terminal commands. Cayenn protocol for IoT.</p>
+
+                                    <div class="list-group">
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_windows_386.zip">Windows x32</a>
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_windows_amd64.zip">Windows x64</a>
+                                        <!--<a class="list-group-item" target="_blank" href="http://chilipeppr.com/downloads/v1.86/serial-port-json-server-1.86_darwin_amd64.zip">Mac OS X x64</a>-->
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_linux_386.tar.gz">Linux x32</a>
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_linux_amd64.tar.gz">Linux x64</a>
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_linux_arm.tar.gz">Raspberry Pi (Linux ARM)</a>
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_linux_arm.tar.gz">Beagle Bone Black (Linux ARMv7)</a>
+                                        <a class="list-group-item" href="https://github.com/chilipeppr/serial-port-json-server/releases/download/v1.88/serial-port-json-server-1.88_linux_amd64.tar.gz">Intel Edison (Linux x64)</a>
+                                        <a class="list-group-item" target="_blank" href="http://github.com/chilipeppr/serial-port-json-server/releases">Github Release Page</a>
+                                        <a class="list-group-item" target="_blank" href="http://github.com/chilipeppr/serial-port-json-server">Compile from source (Github)</a>
+                                    </div>
+
+                                    <!-- v1.86 -->
                                     <p style="padding:0 0 12px 0;">Version 1.86
                                         <br/> Build date: Oct 4, 2015
                                         <br/> Latest TinyG buffer and firmware programmer.</p>

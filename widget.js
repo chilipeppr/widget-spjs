@@ -49,7 +49,7 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     
     sp.init({
       isSingleSelectMode: true,
-      defaultBuffer: "timed",
+      defaultBuffer: "nodemcu",
       defaultBaud: 9600,
       bufferEncouragementMsg: 'For your NodeMCU device please choose the "timed" buffer in the pulldown and a 9600 baud rate before connecting.'
     });
