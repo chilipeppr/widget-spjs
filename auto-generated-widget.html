@@ -365,10 +365,10 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             '/ws/send' : `This widget subscribes to this signal so anybody can publish 
 to SPJS by publishing here. You can send any command that SPJS supports. Please see the 
 docs for all support SPJS commands on Github at 
-<a target="_blank" href="https://github.com/chilipeppr/serial-port-json-server#supported-commands">https://github.com/chilipeppr/serial-port-json-server#supported-commands</a>.<br>
+<a target="_blank" href="https://github.com/chilipeppr/serial-port-json-server#supported-commands">https://github.com/chilipeppr/serial-port-json-server#supported-commands</a>.
 
 Example<br>
-chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "send COM22 G0 X0\\n");<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "send COM22 G0 X0\\n");
 
 Example of sending non-buffered command<br>
 chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "sendnobuf /dev/ttyUSB0 M3 S1000\\n");
