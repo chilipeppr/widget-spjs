@@ -96,7 +96,19 @@ To better understand how ChiliPeppr's publish() method works see amplify.js's do
           </tr>
       </thead>
       <tbody>
-      <tr valign="top"><td>/com-chilipeppr-widget-serialport/ws/send</td><td>This widget subscribes to this signal so anybody can publish to a serial port by publishing here. You must specify which websocket (since multiple are supported, i.e. you could have 10 serial port servers running), and which serial port, i.e. COM21, and the data you are sending. Choosing which websocket not supported yet.</td></tr><tr valign="top"><td>/com-chilipeppr-widget-serialport/send</td><td>This widget subscribes to this signal whereby you can simply send to this pubsub channel (instead of /ws/send which is lower level) and the widget will send to all serial ports that you are connected to at the same time. This is useful if you are sychronizing multiple hardware. You may put this widget into setSingleSelectMode() and then it will be the last port you opened that the data is sent to indicated by a green highlight in the UI. Most serial devices expect newline characters, so you should send those in your string as this pubsub channel does not add them.</td></tr><tr valign="top"><td>/com-chilipeppr-widget-serialport/jsonSend</td><td><p>This signal is like /send but a more structured version where you can send us commands like {"D": "G0 X1
+      <tr valign="top"><td>/com-chilipeppr-widget-serialport/ws/send</td><td>This widget subscribes to this signal so anybody can publish 
+to SPJS by publishing here. You can send any command that SPJS supports. Please see the 
+docs for all support SPJS commands on Github at 
+<a target="_blank" href="https://github.com/chilipeppr/serial-port-json-server#supported-commands">https://github.com/chilipeppr/serial-port-json-server#supported-commands</a>.<br><br><br><br>Example<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "send COM22 G0 X0\n");<br><br><br><br>Example of sending non-buffered command<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "sendnobuf /dev/ttyUSB0 M3 S1000\n");<br><br>
+</td></tr><tr valign="top"><td>/com-chilipeppr-widget-serialport/send</td><td>This widget subscribes to this signal whereby you can simply send 
+to this pubsub channel (instead of /ws/send which is lower level) and the widget will
+send to the default serial ports that you are connected to (the green highlight in the UI). 
+Most serial devices expect newline characters, so you should send those in your string as 
+this pubsub channel does not add them.<br><br><br><br>Example<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\n");
+</td></tr><tr valign="top"><td>/com-chilipeppr-widget-serialport/jsonSend</td><td><p>This signal is like /send but a more structured version where you can send us commands like {"D": "G0 X1
 ", "Id":"123"} or an array like [{"D": "G0 X1
 ", "Id":"123"}, {"D": "G0 X2
 ", "Id":"124"}] and then this widget will send callback signals in order of /onQueue, /onWrite, /onComplete. The payload is {"Id":"123"} on each of those.</p> <p>The SPJS has 3 steps to get your command to the serial device. Step 1 is /onQueue and this will come back immediately when SPJS has taken your command and queued it to memory/disk. Step 2 is /onWrite when SPJS actually has written your command to the serial device. If the device takes a while to execute the command it could be a bit of time until that command is physically executed. Step 3 is /onComplete which is SPJS attempting to watch for a response from the serial device to determine that indeed your command is executed. Please note /onComplete can come back prior to /onWrite based on your serial device and how fast it may have executed your serial command.</p> <p>You can omit the Id if you do not care about tracking. You will get callbacks with an empty Id so you will not be able to match them up. If you send in /jsonSend {"D": "G0 X1

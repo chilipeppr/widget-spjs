@@ -362,8 +362,26 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             '/recvStatus' : 'Send in a /requestStatus and we will send you back a /recvStatus letting you know if SPJS is connected or not to the Serial Port JSON Server. The payload that comes to you in /recvStatus looks like {"Connected":true, "Websocket": ws } or {"connected":false, "websocket":null}. If you want to be pushed an event when the socket connects or disconnects you should subscribe to /ws/onconnect and /ws/ondisconnect'
         },
         subscribe: {
-            '/ws/send' : "This widget subscribes to this signal so anybody can publish to a serial port by publishing here. You must specify which websocket (since multiple are supported, i.e. you could have 10 serial port servers running), and which serial port, i.e. COM21, and the data you are sending. Choosing which websocket not supported yet.",
-            '/send' : "This widget subscribes to this signal whereby you can simply send to this pubsub channel (instead of /ws/send which is lower level) and the widget will send to all serial ports that you are connected to at the same time. This is useful if you are sychronizing multiple hardware. You may put this widget into setSingleSelectMode() and then it will be the last port you opened that the data is sent to indicated by a green highlight in the UI. Most serial devices expect newline characters, so you should send those in your string as this pubsub channel does not add them.",
+            '/ws/send' : `This widget subscribes to this signal so anybody can publish 
+to SPJS by publishing here. You can send any command that SPJS supports. Please see the 
+docs for all support SPJS commands on Github at 
+<a target="_blank" href="https://github.com/chilipeppr/serial-port-json-server#supported-commands">https://github.com/chilipeppr/serial-port-json-server#supported-commands</a>.<br><br>
+
+Example<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "send COM22 G0 X0\\n");<br><br>
+
+Example of sending non-buffered command<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "sendnobuf /dev/ttyUSB0 M3 S1000\\n");<br><br>
+`,
+            '/send' : `This widget subscribes to this signal whereby you can simply send 
+to this pubsub channel (instead of /ws/send which is lower level) and the widget will
+send to the default serial ports that you are connected to (the green highlight in the UI). 
+Most serial devices expect newline characters, so you should send those in your string as 
+this pubsub channel does not add them.<br><br>
+
+Example<br>
+chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
+`,
             '/jsonSend' : '<p>This signal is like /send but a more structured version where you can send us commands like {"D": "G0 X1\n", "Id":"123"} or an array like [{"D": "G0 X1\n", "Id":"123"}, {"D": "G0 X2\n", "Id":"124"}] and then this widget will send callback signals in order of /onQueue, /onWrite, /onComplete. The payload is {"Id":"123"} on each of those.</p> <p>The SPJS has 3 steps to get your command to the serial device. Step 1 is /onQueue and this will come back immediately when SPJS has taken your command and queued it to memory/disk. Step 2 is /onWrite when SPJS actually has written your command to the serial device. If the device takes a while to execute the command it could be a bit of time until that command is physically executed. Step 3 is /onComplete which is SPJS attempting to watch for a response from the serial device to determine that indeed your command is executed. Please note /onComplete can come back prior to /onWrite based on your serial device and how fast it may have executed your serial command.</p> <p>You can omit the Id if you do not care about tracking. You will get callbacks with an empty Id so you will not be able to match them up. If you send in /jsonSend {"D": "G0 X1\nG0 X0\n", "Id":"123"} you will get back /onQueue [{"D":"G0 X1\n","Id":"123","Buf":"Buf"},{"D":"G0 X0\n","Id":"123-part-2-2","Buf":"Buf"}] because technically those are 2 commands with one Id. Some commands sent into Serial Port JSON Server get additional commands auto-added. For example, if you send in a command to TinyG that would put it in text mode, SPJS appends a command to put TinyG back in JSON mode. In those cases you will get parts added to your command and will see that in the response.</p>',
             '/getlist' : "In case any other widget/element wants to request the list at any time, they can send a signal to this channel and we'll respond back with a /list",
             '/requestVersion' : "Send in this signal to get back a /recvVersion. This is so other widgets can pivot off of what version of Serial Port JSON Server is running. For example, the Arduino/Atmel programmer sends in a /requestVersion to get a callback on /recvVersion to determine if you are at version 1.83 or above to know whether you have the correct functionality.",
