@@ -110,7 +110,9 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/ws/send", "sendnobuf /dev/
 to this pubsub channel (instead of /ws/send which is lower level) and the widget will
 send to the default serial ports that you are connected to (the green highlight in the UI). 
 Most serial devices expect newline characters, so you should send those in your string as 
-this pubsub channel does not add them.<br><br><br><br>Example<br>
+this pubsub channel does not add them.
+<br><br>
+Example<br>
 chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\n");
 </td></tr><tr valign="top"><td>/com-chilipeppr-widget-serialport/jsonSend</td><td><p>This signal is like /send but a more structured version where you can send us commands like {"D": "G0 X1
 ", "Id":"123"} or an array like [{"D": "G0 X1
