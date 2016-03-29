@@ -1265,7 +1265,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 else
                     fullurl = "ws://" + host + ":8989/ws";
                 this.conn = new WebSocket(fullurl);
-                this.conn.host = host;
+                this.activehost = host;
                 console.log(this.conn);
                 var that = this;
                 that.conn.onopen = function (evt) {
@@ -1569,7 +1569,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             }
             
             // publish /ws/onconnect
-            chilipeppr.publish('/' + this.id + '/ws/onconnect', data, this.conn);
+            chilipeppr.publish('/' + this.id + '/ws/onconnect', data, {websocket:this.conn, host:this.activehost});
             
             // publish /onportopen
             chilipeppr.publish('/' + this.id + '/onportopen', data);
@@ -2241,7 +2241,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             this.isWsConnected = true;
             //console.log(this.conn);
             //console.log(event);
-            chilipeppr.publish("/" + this.id + "/ws/onconnect", "connected", this.conn);
+            chilipeppr.publish("/" + this.id + "/ws/onconnect", "connected", {websocket:this.conn, host:this.activehost});
             // also publish status
             this.onRequestStatus();
             //this.publishSysMsg("Serial port ajax connection opened at " + this.conn.url + ", readyState: " + this.conn.readyState);
