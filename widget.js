@@ -134,7 +134,7 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
         publish: {
             '/list' : "Sends the list of serial ports shown in this widget including the connect state so other widgets/elements in ChiliPeppr can use the list including knowing what serial ports to send/recv from. Send in /getList and get back a /list with the JSON payload of the list.", 
             '/listAfterMetaDataAdded' : "Similar to /list but the list will have meta data added to it like an image, or default baud rates, or a modified friendly name. It may even be marked as deleted for dual port scenarios where a port may be considered the 2nd port.", 
-            '/ws/onconnect' : 'When the websocket connects. This widget currently supports only a single websocket. In the future, multiple websockets will be supported and a ws identifier will be attached. For now, you will receive the string "connected" in the payload. For multiple websockets a 2nd parameter will be published with the ws:// url',
+            '/ws/onconnect' : 'When the websocket connects. This widget currently supports only a single websocket. In the future, multiple websockets will be supported and a ws identifier will be attached. For now, you will receive the string "connected" in the payload. The 2nd parameter will be the websocket in case you need it like to retrieve the IP address of SPJS. For multiple websockets an additional parameter will be published with the ws:// url',
             '/ws/ondisconnect' : "When the websocket disconnects.", 
             '/ws/sys' : "A system message. Mostly for visual display like an error.",
             '/ws/recv' : "A signal published when the websocket receives data from the serial port server. The serial port, i.e. COM21, the websocket identifier, and data are sent.",
@@ -974,7 +974,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                         Data: this.sendbufjson
                     }
                     // TODO: GET IN CORRECT FORMAT
-                    msg = "sendjson " + JSON.stringify(payload);
+                    var msg = "sendjson " + JSON.stringify(payload);
                     this.isSendBufWaitingJson = true; // make sure we wait
                     this.wsSend(msg);
                     
@@ -1568,7 +1568,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             }
             
             // publish /ws/onconnect
-            chilipeppr.publish('/' + this.id + '/ws/onconnect', data);
+            chilipeppr.publish('/' + this.id + '/ws/onconnect', data, this.conn);
             
             // publish /onportopen
             chilipeppr.publish('/' + this.id + '/onportopen', data);
@@ -2221,7 +2221,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         },
         bufferAlgorithms: null,
         getBufferAlgorithms: function() {
-            if (bufferAlgorithms == null) {
+            if (this.bufferAlgorithms == null) {
                 console.log("Need to load algorithms from serial port json server");
                 this.wsSend("bufferalgorithms");
                 
@@ -2240,7 +2240,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             this.isWsConnected = true;
             //console.log(this.conn);
             //console.log(event);
-            chilipeppr.publish("/" + this.id + "/ws/onconnect", "connected");
+            chilipeppr.publish("/" + this.id + "/ws/onconnect", "connected", this.conn);
             // also publish status
             this.onRequestStatus();
             //this.publishSysMsg("Serial port ajax connection opened at " + this.conn.url + ", readyState: " + this.conn.readyState);
