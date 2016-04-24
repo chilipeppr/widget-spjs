@@ -1428,6 +1428,8 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         wsWasEverConnected: false,
         wsConnect: function (hostname, onsuccess, onfail) {
             
+            console.log("websocket connect. hostname:", hostname);
+            
             // make sure other sockets are disconnected. this was extra important because if you port
             // scanned and got a bunch of server results and clicked a bunch quickly, you'd get multiple
             // socket connections going
