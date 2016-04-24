@@ -347,6 +347,10 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 $('#com-chilipeppr-widget-serialport-host').val("localhost");
                 that.onRemoteHostConnect();
             });
+            $('.spjs-connect2localhostSSL').click(function() {
+                $('#com-chilipeppr-widget-serialport-host').val("wss://localhost:8990/ws");
+                that.onRemoteHostConnect();
+            });
             
             // if connect btn or enter key on remote host connect
             var remoteCon = $('#com-chilipeppr-widget-serialport-hostbtn');
@@ -586,6 +590,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             chilipeppr.publish("/com-chilipeppr-widget-serialport/recvSingleSelectPort", port);
         },
         onRemoteHostConnect: function() {
+            console.log("onRemoteHostConnect");
             var host = $('#com-chilipeppr-widget-serialport-host').val();
             $('#com-chilipeppr-widget-serialport-hostconnectmsg').html(
                 "Trying to connect to " +
@@ -1266,6 +1271,22 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                     fullurl = "ws://" + host + "/ws";
                 else
                     fullurl = "ws://" + host + ":8989/ws";
+                    
+                // see if we need wss://
+                if (location.protocol === 'https:') {
+                    // page is secure
+                    console.log("this page requires ssl");
+                    
+                    if (fullurl.match(/wss/i)) {
+                        // we're good to try cuz they want wss
+                        console.log("good, user wants wss. host:", fullurl);
+                    } else {
+                        console.log("the websocket host url is not wss. host:", fullurl);
+                        if (onfail) onfail.apply(that);
+                        return;
+                    }
+                }
+                
                 this.conn = new WebSocket(fullurl);
                 this.activehost = host;
                 console.log(this.conn);
