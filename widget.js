@@ -256,7 +256,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
               this.defaultOptions = opt;
             	if ('isSingleSelectMode' in opt) this.setSingleSelectMode();
               if ('defaultBuffer' in opt) buffertype = opt.defaultBuffer;
-              if ('defaultBaud' in opt) defaultBad = opt.defaultBaud;
+              if ('defaultBaud' in opt) defaultBaud = opt.defaultBaud;
               if ('bufferEncouragementMsg' in opt) buffertypeDescription = opt.bufferEncouragementMsg;
             }
             
@@ -295,6 +295,16 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             this.statusWatcher();
             this.wsConnect(null);
             //this.wsConnect(null, host);
+            
+            // allow dedupe mode
+            chilipeppr.subscribe("/" + this.id + "/dedupeOn", this, function (msg) {
+                console.log("spjs widget now in dedupe mode");
+                this.isInDeDupeMode = true;
+            });
+            chilipeppr.subscribe("/" + this.id + "/dedupeOff", this, function (msg) {
+                console.log("spjs widget no longer in dedupe mode");
+                this.isInDeDupeMode = false;
+            });
             
             // setup onconnect pubsub event
             chilipeppr.subscribe("/" + this.id + "/ws/onconnect", this, function (msg) {
@@ -1442,8 +1452,20 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 this.lastMsgTime = now;
             }
         },
+        deDupeLastMsg: null,
+        isInDeDupeMode: false,
         publishMsg: function (msg) {
+            if (this.isInDeDupeMode) {
+                if (this.deDupeLastMsg == msg) {
+                    // found dedupe, so don't publish
+                    console.log("dedupe");
+                    // this.deDupeLastMsg = msg;
+                    return;
+                }
+            }
             chilipeppr.publish("/" + this.id + "/ws/recv", msg);
+            
+            if (this.isInDeDupeMode) this.deDupeLastMsg = msg;
         },
         dataBuffer: {},
         onWsMessage: function (msg) {
