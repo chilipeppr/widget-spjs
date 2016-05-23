@@ -297,13 +297,14 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             //this.wsConnect(null, host);
             
             // allow dedupe mode
+            var that = this;
             chilipeppr.subscribe("/" + this.id + "/dedupeOn", this, function (msg) {
                 console.log("spjs widget now in dedupe mode");
-                this.isInDeDupeMode = true;
+                that.isInDeDupeMode = true;
             });
             chilipeppr.subscribe("/" + this.id + "/dedupeOff", this, function (msg) {
                 console.log("spjs widget no longer in dedupe mode");
-                this.isInDeDupeMode = false;
+                that.isInDeDupeMode = false;
             });
             
             // setup onconnect pubsub event
