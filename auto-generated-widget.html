@@ -1652,7 +1652,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         isInDeDupeMode: false,
         publishMsg: function (msg) {
             if (this.isInDeDupeMode) {
-                console.log("in dedupe mode, so checking...");
+                console.log("in dedupe mode, so checking. msg:", msg, "lastMsg:", this.deDupeLastMsg);
                 if (this.deDupeLastMsg == msg) {
                     // found dedupe, so don't publish
                     console.log("dedupe");
