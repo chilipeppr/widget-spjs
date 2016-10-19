@@ -2007,10 +2007,11 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                         "<td>" + 
                         "<div class=\"btn-group-vertical\" role=\"group\">" +
                         "<button id=\"" + i + "Config\" class=\"btn btn-xs btn-default btn-top\" data-toggle=\"popover\" data-placement=\"auto\" data-container=\"body\" data-content=\"Startup script for this serial port.\" data-trigger=\"hover\"><span class=\"glyphicon glyphicon-cog\"></span></button>" + 
-                        "<button id=\"" + i + "Program\" class=\"btn btn-xs btn-default btn-bottom com-chilipeppr-serialport-programmerBtn\" data-toggle=\"popover\" data-placement=\"auto\" data-container=\"body\" data-content=\"Program the board's firmware.\" data-trigger=\"hover\"><span class=\"glyphicon\">" +  
+                        "<button id=\"" + i + "Program\" class=\"btn btn-xs btn-default btn-middle com-chilipeppr-serialport-programmerBtn\" data-toggle=\"popover\" data-placement=\"auto\" data-container=\"body\" data-content=\"Program the board's firmware.\" data-trigger=\"hover\"><span class=\"glyphicon\">" +  
                         //arduinoIcon[0].innerHTML + 
                         arduinoIcon.html() + 
                         "</span></button>" + 
+                        "<button id=\"" + i + "SetDefault\" class=\"btn btn-xs btn-default btn-bottom com-chilipeppr-serialport-setDefaultBtn\" data-toggle=\"popover\" data-placement=\"auto\" data-container=\"body\" data-content=\"Manually set this port to the default port (green).\" data-trigger=\"hover\"><span class=\"glyphicon glyphicon-finger\"></span></button>" +  
                         "</div>" +
                         "</td>" +
                         
