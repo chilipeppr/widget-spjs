@@ -2174,6 +2174,9 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             $('.com-chilipeppr-widget-serialport-portlist > tbody > tr').removeClass("success");
             $('#' + data.rowName + "Row").addClass("success");
             this.singleSelectPort = data.port;
+            
+            // now publish for other listeners who want to know if single select port changed
+            this.publishSingleSelectPort();
         },
         onPortProgramClicked: function(evt) {
             console.log("programmer btn got clicked for evt.data:", evt.data, "this.conn:", this.conn);
