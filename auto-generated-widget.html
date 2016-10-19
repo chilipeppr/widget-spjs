@@ -2206,7 +2206,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                         //arduinoIcon[0].innerHTML + 
                         arduinoIcon.html() + 
                         "</span></button>" + 
-                        "<button id=\"" + i + "SetDefault\" class=\"btn btn-xs btn-default btn-bottom com-chilipeppr-serialport-setDefaultBtn\" data-toggle=\"popover\" data-placement=\"auto\" data-container=\"body\" data-content=\"Manually set this port to the default port (green).\" data-trigger=\"hover\"><span class=\"glyphicon glyphicon-finger\"></span></button>" +  
+                        "<button id=\"" + i + "SetDefault\" class=\"btn btn-xs btn-default btn-bottom com-chilipeppr-serialport-setDefaultBtn\" data-toggle=\"popover\" data-placement=\"auto\" data-container=\"body\" data-content=\"Manually set this port to the default port (green).\" data-trigger=\"hover\"><span class=\"glyphicon glyphicon-ok\"></span></button>" +  
                         "</div>" +
                         "</td>" +
                         
@@ -2324,6 +2324,8 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 // if they click the programmer button
                 $('#' + i + "Program").click({that:that,port:item}, that.onPortProgramClicked.bind(that));
 
+                // if they click the set default button
+                $('#' + i + "SetDefault").click({that:that,port:item,rowName:i}, that.onPortSetDefaultClicked.bind(that));
             });
 
             // set isInitting to false, that means only the 1st time
@@ -2358,6 +2360,15 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         },
         hideAllPopovers: function() {
             $('.com-chilipeppr-widget-serialport .btn').popover('hide');
+        },
+        onPortSetDefaultClicked: function(evt) {
+            console.log("set default btn clicked for evt.data:", evt.data, "this.conn:", this.conn);
+        
+            // hilite this port
+            var data = evt.data;
+            $('.com-chilipeppr-widget-serialport-portlist > tbody > tr').removeClass("success");
+            $('#' + data.rowName + "Row").addClass("success");
+            this.singleSelectPort = data.port;
         },
         onPortProgramClicked: function(evt) {
             console.log("programmer btn got clicked for evt.data:", evt.data, "this.conn:", this.conn);
