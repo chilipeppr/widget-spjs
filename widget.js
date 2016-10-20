@@ -119,6 +119,27 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     }
     testStatus();
     
+    // we need to also load the serial port console to make sure they are synced
+    // Inject new div to contain widget or use an existing div with an ID
+    $("body").append('<' + 'div id="myDivWidgetSpconsole"><' + '/div>');
+    
+    chilipeppr.load(
+      "#myDivWidgetSpconsole",
+    //   "http://raw.githubusercontent.com/chilipeppr/widget-console/master/auto-generated-widget.html",
+      "http://widget-console-chilipeppr.c9users.io/widget.html",
+      function() {
+        // Callback after widget loaded into #myDivWidgetSpconsole
+        // Now use require.js to get reference to instantiated widget
+        cprequire(
+          ["inline:com-chilipeppr-widget-spconsole"], // the id you gave your widget
+          function(myObjWidgetSpconsole) {
+            // Callback that is passed reference to the newly loaded widget
+            console.log("Widget / Serial Port Console v1.7 just got loaded.", myObjWidgetSpconsole);
+            myObjWidgetSpconsole.init(true);
+          }
+        );
+      }
+    );
 
 } /*end_test*/ );
 
@@ -964,6 +985,8 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         },
         sendBufferedDoNextJson: function() {
             //console.group("serial port widget - sendBufferedDoNextJson");
+            console.log("sendBufferedDoNextJson. sendbufjson:", this.sendbufjson);
+            
             if (this.sendbufjson.length == 0) {
                 //console.log("no more items on json buffer so exiting and not queuing for next");
                 this.appendLog("(No more items on json buffer.)");
@@ -972,7 +995,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             }
             
             if (this.isSendBufWaitingJson) {
-                //console.log("isSendBufWaitingJson is true, so returning.");
+                console.log("isSendBufWaitingJson is true, so returning.");
                 //console.groupEnd();
                 return;
             }
@@ -983,7 +1006,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             if (this.isSingleSelectMode) {
                 if (this.singleSelectPort != null && this.singleSelectPort.length > 1) {
                     
-                    //console.log("setting isSendBufWaitingJson to true. sending to port:", this.singleSelectPort);
+                    console.log("setting isSendBufWaitingJson to true. sending to port:", this.singleSelectPort);
                     
                     var payload = {
                         P: this.singleSelectPort,
@@ -1014,6 +1037,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         },
         sendViaJson: function(json) {
             //console.group("serial port widget - sendViaJson");
+            console.log("sendViaJson. json:", json);
             
             // we should be passed json that looks like
             //  {"D": "G0 X1\n", "Id":"123"} 
