@@ -323,8 +323,8 @@ cprequire_test(["inline:com-chilipeppr-widget-serialport"], function (sp) {
     
     chilipeppr.load(
       "#myDivWidgetSpconsole",
-    //   "http://raw.githubusercontent.com/chilipeppr/widget-console/master/auto-generated-widget.html",
-      "http://widget-console-chilipeppr.c9users.io/widget.html",
+      "http://raw.githubusercontent.com/chilipeppr/widget-console/master/auto-generated-widget.html",
+    //   "http://widget-console-chilipeppr.c9users.io/widget.html",
       function() {
         // Callback after widget loaded into #myDivWidgetSpconsole
         // Now use require.js to get reference to instantiated widget
@@ -2011,6 +2011,13 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 name: "Arduino Yun",
                 buffer: "default",
                 img: "http://chilipeppr.com/img/boards/yun.jpg"
+            },
+            "nodemcu" : {
+                vidpids: [{vid:"10c4", pid:"ea60"}],
+                name: "NodeMCU / CP2102",
+                buffer: "nodemcu",
+                baud: "9600",
+                img: "https://github.com/chilipeppr/workspace-nodemcu/raw/master/nodemcu.jpg"
             }
         },
         setPortItemsFromMetaData: function(dm /*device meta*/, item /*port*/, portlistIndex) {
