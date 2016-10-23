@@ -2665,7 +2665,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                                 if ("port" in meta) {
                                     if ("img" in meta.port) table += "<td rowspan=\"2\"><img style=\"width:50px;xpadding-right:10px;\" src=\"" + meta.port.img + "\" /></td>";
                                     if ("DisplayName" in meta.port) table += "<td>" + meta.port.DisplayName + "</td>";
-                                    if ("DisplayPort" in meta.port) table += "<td>" + meta.port.DisplayPort + "</td>";
+                                    // if ("DisplayPort" in meta.port) table += "<td>" + meta.port.DisplayPort + "</td>";
                                     if ("url" in meta) table += "<td>" + meta.url + "</td>";
                                 }
                                 table += "</tr>";
