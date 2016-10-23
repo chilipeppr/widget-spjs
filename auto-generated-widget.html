@@ -381,7 +381,8 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
             '/onWrite' : 'This signal is published when a command is written to the serial port on SPJS. Payload is {"Id":"123", "QCnt":0, "Port":"COM2"}. The serial command is not reiterated in this signal like it is in /onQueue. See /jsonSend for more info.', 
             '/onComplete' : 'This signal is published when a command is done being written on SPJS and is known to have been processed by the serial device. Payload is {"Id":"123"}. Please note that sometimes /onComplete could come back before /onWrite due to the multi-threaded nature of serial ports and writing/reading as well as network congestion. See /jsonSend for more info.' ,
             '/onError' : 'This signal is published when a command produces an error in the CNC controller either due to a gcode syntax problem, or an unsupported gcode command.  This signal can be used by the cnc-interface widget to handle for errors, or pause/cancel gcode execution so that the problem can be rectified.',
-            '/onBroadcast' : 'This signal is published when we see a broadcast message come in from SPJS and we simply regurgitate it out on this signal for any widget to listen to.',
+            '/onBroadcast' : 'This signal is published when we see a broadcast message come in from SPJS and we simply regurgitate it out on this signal for any widget to listen to. To send a broadcast signal into SPJS you just use the command \"broadcast blah blah\" and then SPJS re-broadcasts that to all listeners with a packet like {Cmd:\"Broadcast\", Msg:\"blah blah\"}. For example, the ShuttleXpress CNC jog shuttle connects to SPJS on its own and when you click buttons on the device it broadcasts them to SPJS so widgets inside ChiliPeppr can respond to those clicks.',
+            '/onAnnounce' : 'This signal is published when we see an announce message come in from SPJS and we simply regurgitate it out on this signal for any widget to listen to. An announce signal is part of the Cayenn protocol. Basically an IoT device like an ESP8266 sends in a UDP broadcast to the network announcing its existence. SPJS listens for those and then sends a copy of the announcement to any SPJS listeners, like us. Then this SPJS widget publishes it out so other widgets inside ChiliPeppr can listen for the message.',
             '/onFeedRateOverride' : 'This signal is published when we get a feed rate override update from SPJS. It will contain the payload similar to {"Cmd":"FeedRateOverride","Desc":"Providing you status of feed rate override.","Port":"COM7","FeedRateOverride":0,"IsOn":false}',
             '/recvStatus' : 'Send in a /requestStatus and we will send you back a /recvStatus letting you know if SPJS is connected or not to the Serial Port JSON Server. The payload that comes to you in /recvStatus looks like {"Connected":true, "Websocket": ws } or {"connected":false, "websocket":null}. If you want to be pushed an event when the socket connects or disconnects you should subscribe to /ws/onconnect and /ws/ondisconnect'
         },
@@ -633,8 +634,22 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             this.setupRecentServerList();
             this.showRecentServerList();
             
+            this.setupSubnetScan();
+            
             console.log(this.name + " done loading.");
             console.groupEnd();
+        },
+        setupSubnetScan: function() {
+            window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;   //compatibility for firefox and chrome
+            var pc = new RTCPeerConnection({iceServers:[]}), noop = function(){};      
+            pc.createDataChannel("");    //create a bogus data channel
+            pc.createOffer(pc.setLocalDescription.bind(pc), noop);    // create offer and set local description
+            pc.onicecandidate = function(ice){  //listen for candidate events
+                if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
+                var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
+                console.log('my IP: ', myIP);   
+                pc.onicecandidate = noop;
+            };    
         },
         setupRecentServerList: function() {
           var that = this;
@@ -1109,7 +1124,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             this.sendbuf.push(msg);
             
             // only trigger buffer send if we aren't waiting
-            setTimeout(this.sendBufferedDoNext.bind(this), 1);
+            setTimeout(this.sendBufferedDoNext.bind(this), 10);
             
         },
         sendBufferedDoNext: function() {
@@ -1160,7 +1175,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         sendBufferedOnWsRecv: function(data) {
             console.log("got sendBufferedOnWsRecv. setting isSendBufWaiting to false. data:", data);
             this.isSendBufWaiting = false; // mark to false cuz if we're queued we can now move forward
-            setTimeout(this.sendBufferedDoNext.bind(this), 1); // 1 ms
+            setTimeout(this.sendBufferedDoNext.bind(this), 10); // 1 ms
         },
         // TODO: Make all json buffered sending work on multiple ports. For now it's just single select port.
         sendbufjson: [],
@@ -1178,7 +1193,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             this.sendbufjson.push(msg);
             
             // only trigger buffer send if we aren't waiting
-            setTimeout(this.sendBufferedDoNextJson.bind(this), 1);
+            setTimeout(this.sendBufferedDoNextJson.bind(this), 10);
             
         },
         sendBufferedDoNextJson: function() {
@@ -1228,7 +1243,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         sendBufferedOnWsRecvJson: function(data) {
             //console.log("got sendBufferedOnWsRecvJson. setting isSendBufWaitingJson to false. data:", data);
             this.isSendBufWaitingJson = false; // mark to false cuz if we're queued we can now move forward
-            setTimeout(this.sendBufferedDoNextJson.bind(this), 1); // 1 ms
+            setTimeout(this.sendBufferedDoNextJson.bind(this), 10); // 1 ms
         },
         sendFromConsole: function(msg) {
             this.wsSend(msg);
@@ -1334,6 +1349,24 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         onBroadcast: function(data){
             //console.log("onBroadcast data:", data);
             chilipeppr.publish("/" + this.id + "/onBroadcast", data.Msg);                
+        },
+        onAnnounce: function(data){
+            //console.log("onBroadcast data:", data);
+            
+            // let's tweak the data. if we get this format
+            /*
+            Addr: {},
+            Announce: "i-am-a-client",
+            DeviceId: "chip:10833368-flash:1458415-mac:18:fe:34:a5:4d:d8",
+            JsonTag: "{"Icon":"http:\/\/chilipeppr.com\/img\/dispenser.jpg","Name":"Dispenser DMP-10","WidgetUrl":"https:\/\/github.com\/chilipeppr\/widget-dispenser\/auto-generated.html","Widget":"com-chilipeppr-widget-dispenser","Desc":"Techcon DMP-10 auger with stepper and linear slide"}"
+            Widget: "com-chilipeppr-widget-dispenser"
+            */
+            // convert JsonTag to a parsed Tag
+            if ('JsonTag' in data) {
+                console.log("About to parse JsonTag:", data.JsonTag);
+                data.Tag = JSON.parse(data.JsonTag);
+            }
+            chilipeppr.publish("/" + this.id + "/onAnnounce", data);                
         },
         onFeedRateOverride: function(data) {
             chilipeppr.publish("/" + this.id + "/onFeedRateOverride", data);       
@@ -1747,6 +1780,9 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 } else if (data && data.Cmd && data.Cmd == "Broadcast") {   
                     // if spjs returns broadcast, publish broadcast signal.
                     this.onBroadcast(data);
+                } else if (data && 'Announce' in data) {   
+                    // if spjs returns an announce msg from a Cayenn device (IoT device), publish broadcast signal.
+                    this.onAnnounce(data);
                 } else if (data && data.Cmd && data.Cmd == "FeedRateOverride") {   
                     // if spjs returns FeedRateOverride, publish onFeedRateOverride signal.
                     this.onFeedRateOverride(data);
