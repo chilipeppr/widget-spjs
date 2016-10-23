@@ -2490,6 +2490,9 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             $('#com-chilipeppr-serialport-modalconfig .modalconfig-save-btn').click(evt.data, this.onPortConfigModalSave.bind(this));
 
             $('#com-chilipeppr-serialport-modalconfig').modal('show');
+            
+            // now check user
+            this.checkLogin();
         },
         onPortConfigModalSave: function(evt) {
             console.log("got save on port config modal. evt.data:", evt.data);
@@ -2511,6 +2514,93 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             $('#com-chilipeppr-serialport-modalconfig').modal('hide');
             
             chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Saved Startup Script for " + portid, "Saved your startup script. It will be run when you connect to the port.");
+        
+            // now, let's also save this to ChiliPeppr cloud storage
+            
+            
+        },
+        currentUser: null,
+        checkLogin: function() {
+          var that = this;
+          var jqxhr = $.ajax({
+              url: "http://www.chilipeppr.com/datalogin?callback=?",
+              dataType: 'jsonp',
+              jsonpCallback: 'headerpanel_dataloginCallback',
+              cache: true,
+            }).done(function(data) {
+              console.log(data);
+              if (data.CurrentUser != undefined && data.CurrentUser != null) {
+                console.log("user logged in ", data.CurrentUser);
+                that.currentUser = data.CurrentUser;
+                $('#com-chilipeppr-serialport-modalconfig .alert-warning').text("User logged in as " + that.currentUser);
+                // $('#com-chilipeppr-hdr-login').text(data.CurrentUser.Email);
+                // $('#com-chilipeppr-hdr-dd-login').addClass("hidden");
+                // $('#com-chilipeppr-hdr-dd-logout').prop('href', data.LogoutUrl);
+                // // if they click their login id log them out
+                // $('#com-chilipeppr-hdr-login').prop('href', data.LogoutUrl);
+              } else {
+                console.log("user NOT logged in");
+                $('#com-chilipeppr-serialport-modalconfig .alert-warning').text("User not logged in so can't show saved configs.");
+                // $('#com-chilipeppr-hdr-login').text("Login");
+                // $('#com-chilipeppr-hdr-dd-login').removeClass("hidden");
+                // $('#com-chilipeppr-hdr-dd-logout').addClass("hidden");
+                // $('#com-chilipeppr-hdr-dd-login').prop('href', data.LoginUrl);
+                // $('#com-chilipeppr-hdr-dd-login').prop('target', "new");
+                // $('#com-chilipeppr-hdr-login').prop('href', data.LoginUrl);
+                // $('#com-chilipeppr-hdr-login').prop('target', "new");
+              }
+            })
+            .fail(function() {
+              console.warn("Failed to make the ajax call to check ChiliPeppr login status");
+            })
+        },
+        getUserDataKeysFromChiliPepprStorage: function() {
+
+          console.log("Doing getUserDataKeysFromChiliPepprStorage");
+        
+          // this queries chilipeppr's storage facility to see what
+          // keys are available for the user
+          $('#' + this.id + ' .alert-warning').addClass('hidden');
+        
+          var that = this;
+          var jqxhr = $.ajax({
+              dataType: 'jsonp',
+              cache: false,
+              url: "http://www.chilipeppr.com/datagetallkeys?callback=?",
+              //jsonpCallback: 'yourworkspacesCallback',
+          })
+          .done(function(data) {
+        
+              // see if error
+              if (data.Error) {
+                  // we got json, but it's error
+                  $('#' + that.id + ' .alert-warning')
+                      .html("<p>We can't retrieve your data from ChiliPeppr because you are not logged in. Please login to ChiliPeppr to see your list of available data keys.</p><p>Error: " + data.Msg + "</p>")
+                      .removeClass('hidden');
+                  return;
+              }
+        
+              // loop thru keys and get org-jscut ones
+              var keys = [];
+              var keylist = "<ol>";
+              data.forEach(function(item) {
+                  console.log("item:", item);
+                  if (item.Name) { // && item.Name.match(/workspace/)) {
+                      // we have a jscut file
+                      keys.push({
+                          name: item.Name,
+                          created: item.CreateDate,
+                          size: item.ValueSize
+                      });
+                      keylist += "<li>" + item.Name + "</li>";
+                  }
+              });
+              keylist += "</ol>";
+        
+              $('#' + that.id + " .keylist").html(keylist);
+              console.log("added keylist:", keylist);
+        
+          });
         },
         onPortFriendlyClicked: function(evt) {
             console.log("got onPortFriendlyClicked: ", evt);
@@ -3141,6 +3231,8 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 </div>
                 <div class="modal-body">
                     <h5>Startup script that runs when you open this port</h5>
+                    
+                    <div class="alert-warning">Show alerts here.</div>
 
                     <textarea class="form-control" rows="5" placeholder="$xvm=1&#10;$1po=1&#10;$1pl=0.85">
                     </textarea>
