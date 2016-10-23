@@ -192,6 +192,19 @@
     font-size: 9px;
     height: 16px;
 }
+.lastModifyDate {
+    color:silver;
+}
+.script-code {
+    border: 0;
+    font-size: 9px;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+}
+#com-chilipeppr-serialport-modalconfig .recent-file-item {
+    cursor:pointer;
+}
     </style>
 
     <script type='text/javascript'>
@@ -2516,7 +2529,31 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             chilipeppr.publish("/com-chilipeppr-elem-flashmsg/flashmsg", "Saved Startup Script for " + portid, "Saved your startup script. It will be run when you connect to the port.");
         
             // now, let's also save this to ChiliPeppr cloud storage
-            
+            var that = this;
+            var cpkey = "com-chilipeppr-serialport-script-" + Date.now() + "-" + evt.data.port.DisplayPort;
+            var cpval = {
+                portid: portid,
+                port: evt.data.port,
+                url: url,
+                script: val,
+                saveDate: Date.now()
+            }
+            var cpvalstr = encodeURIComponent(JSON.stringify(cpval));
+            var cpvalstr = JSON.stringify(cpval);
+            var amp = encodeURIComponent("&");
+            cpvalstr = cpvalstr.replace(/&/, amp);
+            console.log("about to save to chilipeppr cloud. cpkey:", cpkey, "cpval:", cpval, "cpvalstr:", cpvalstr);
+            var url = "http://www.chilipeppr.com/dataput?key=" + cpkey + "&val=" + cpvalstr + "&callback=?";
+            // url = encodeURI(url);
+            console.log("len of url:", url.length, "url:", url);
+            var jqxhr = $.ajax({
+              url: url,
+              dataType: 'jsonp',
+            //   jsonpCallback: 'serialport_dataputCallback',
+              cache: false,
+            }).done(function(data) {
+              console.log(data);
+            });
             
         },
         currentUser: null,
@@ -2532,15 +2569,16 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
               if (data.CurrentUser != undefined && data.CurrentUser != null) {
                 console.log("user logged in ", data.CurrentUser);
                 that.currentUser = data.CurrentUser;
-                $('#com-chilipeppr-serialport-modalconfig .alert-warning').text("User logged in as " + that.currentUser);
+                $('#com-chilipeppr-serialport-modalconfig .alert-warning .msg').text("User logged in as " + that.currentUser.Email + ". Saved config scripts available in menu to right.");
                 // $('#com-chilipeppr-hdr-login').text(data.CurrentUser.Email);
                 // $('#com-chilipeppr-hdr-dd-login').addClass("hidden");
                 // $('#com-chilipeppr-hdr-dd-logout').prop('href', data.LogoutUrl);
                 // // if they click their login id log them out
                 // $('#com-chilipeppr-hdr-login').prop('href', data.LogoutUrl);
+                that.getUserDataKeysFromChiliPepprStorage();
               } else {
                 console.log("user NOT logged in");
-                $('#com-chilipeppr-serialport-modalconfig .alert-warning').text("User not logged in so can't show saved configs.");
+                $('#com-chilipeppr-serialport-modalconfig .alert-warning .msg').text("User not logged in so can't show saved configs or save your new one.");
                 // $('#com-chilipeppr-hdr-login').text("Login");
                 // $('#com-chilipeppr-hdr-dd-login').removeClass("hidden");
                 // $('#com-chilipeppr-hdr-dd-logout').addClass("hidden");
@@ -2556,51 +2594,112 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
         },
         getUserDataKeysFromChiliPepprStorage: function() {
 
-          console.log("Doing getUserDataKeysFromChiliPepprStorage");
-        
-          // this queries chilipeppr's storage facility to see what
-          // keys are available for the user
-          $('#' + this.id + ' .alert-warning').addClass('hidden');
-        
-          var that = this;
-          var jqxhr = $.ajax({
-              dataType: 'jsonp',
-              cache: false,
-              url: "http://www.chilipeppr.com/datagetallkeys?callback=?",
-              //jsonpCallback: 'yourworkspacesCallback',
-          })
-          .done(function(data) {
-        
-              // see if error
-              if (data.Error) {
+            console.log("Doing getUserDataKeysFromChiliPepprStorage");
+            
+            // this queries chilipeppr's storage facility to see what
+            // keys are available for the user
+            //   $('#com-chilipeppr-serialport-modalconfig .alert-warning').addClass('hidden');
+            
+            
+            var that = this;
+            var jqxhr = $.ajax({
+                dataType: 'jsonp',
+                cache: false,
+                url: "http://www.chilipeppr.com/datagetallkeys?callback=?",
+                //jsonpCallback: 'yourworkspacesCallback',
+            })
+            .done(function(data) {
+            
+                // see if error
+                if (data.Error) {
                   // we got json, but it's error
-                  $('#' + that.id + ' .alert-warning')
+                  $('#com-chilipeppr-serialport-modalconfig .alert-warning .msg')
                       .html("<p>We can't retrieve your data from ChiliPeppr because you are not logged in. Please login to ChiliPeppr to see your list of available data keys.</p><p>Error: " + data.Msg + "</p>")
                       .removeClass('hidden');
                   return;
-              }
-        
-              // loop thru keys and get org-jscut ones
-              var keys = [];
-              var keylist = "<ol>";
-              data.forEach(function(item) {
-                  console.log("item:", item);
-                  if (item.Name) { // && item.Name.match(/workspace/)) {
-                      // we have a jscut file
-                      keys.push({
+                }
+                
+                // wipe previous menu items
+                $('#com-chilipeppr-serialport-modalconfig .dropdown-menu .recent-file-item').remove();
+                
+                // loop thru keys and get com-chilipeppr-serialport ones
+                var keys = [];
+                var keylist = ""; //"<ol>";
+                data.forEach(function(item) {
+                    console.log("item:", item);
+                    if (item.Name && item.Name.match(/com-chilipeppr-serialport-script-/)) {
+                        // we have a serial port config file
+                        keys.push({
                           name: item.Name,
                           created: item.CreateDate,
                           size: item.ValueSize
-                      });
-                      keylist += "<li>" + item.Name + "</li>";
-                  }
-              });
-              keylist += "</ol>";
-        
-              $('#' + that.id + " .keylist").html(keylist);
-              console.log("added keylist:", keylist);
-        
-          });
+                        });
+                        //   keylist += "<li>" + item.Name + "</li>";
+                        //   keylist += '<li class="recent-file-item"><a href="javascript:">' + item.Name + ' <span class="lastModifyDate">' + item.CreateDate + '</span> ' + item.ValueSize / 1024 + 'KB</a></li>'
+                        
+                        // append this item to the pulldown menu
+                        var itemname = item.Name.replace(/com-chilipeppr-serialport-script-\d+-/, "");
+                        var recentLastModified = item.CreateDate;
+                        var rlm = new Date(recentLastModified);
+                        var recentSize = item.ValueSize;
+                        var rsize = parseInt(recentSize / 1024);
+                        if (rsize == 0) rsize = 1;
+                        var li = $('<li class="recent-file-item ' + item.Name + '"><a xhref="">' + 
+                            itemname + ' <span class="lastModifyDate">' +  rlm.toLocaleString() + '</span> ' + 
+                            rsize + 'KB</a></li>');
+                        // li.click(item, that.onCloudScriptFileClicked.bind(that));
+                        $('#com-chilipeppr-serialport-modalconfig .dropdown-menu').prepend(li);
+                        
+                        // now fire off sub-lookup for this item to load all data
+                        var jqxhr = $.ajax({
+                            dataType: 'jsonp',
+                            cache: false,
+                            url: "http://www.chilipeppr.com/dataget?key=" + item.Name + "&callback=?",
+                        })
+                        .done(function(data) {
+                            console.log("got data back from dataget call. data:", data);
+                            if ("Value" in data) {
+                                var meta = JSON.parse(data.Value);
+                                console.log("meta:", meta);
+                                var table = "<table class=\"table table-striped table-condensed\" style=\"font-size:11px;margin-bottom: 0;\"><tr>";
+                                if ("port" in meta) {
+                                    if ("img" in meta.port) table += "<td rowspan=\"2\"><img style=\"width:50px;xpadding-right:10px;\" src=\"" + meta.port.img + "\" /></td>";
+                                    if ("DisplayName" in meta.port) table += "<td>" + meta.port.DisplayName + "</td>";
+                                    if ("DisplayPort" in meta.port) table += "<td>" + meta.port.DisplayPort + "</td>";
+                                    if ("url" in meta) table += "<td>" + meta.url + "</td>";
+                                }
+                                table += "</tr>";
+                                if ("script" in meta) {
+                                    var scr = meta.script.substring(0, 100);
+                                    if (meta.script.length > 100) scr += "...";
+                                    table += "<tr><td colspan=\"3\" xstyle=\"font-family:monospace\"><pre class=\"script-code\">" + 
+                                    scr + "</pre></td></tr>";
+                                }
+                                table += "</table>";
+                                var tableEl = $(table);
+                                $('.' + data.Name + " a").append(tableEl);
+                                
+                                // make click event
+                                var payload = data;
+                                payload.meta = meta;
+                                $('.' + data.Name + " a").click(payload, that.onCloudScriptFileClicked.bind(that));
+                            }
+                        });
+                    }
+                }
+            );
+            //   keylist += "</ol>";
+            
+            //   $('#com-chilipeppr-serialport-modalconfig .dropdown-menu').html(keylist);
+            console.log("added keylist:", keylist);
+            
+            });
+        },
+        onCloudScriptFileClicked: function(evt) {
+            // put the script into the textarea
+            console.log("being asked to insert saved cloud script. evt:", evt);
+            
+            $('#com-chilipeppr-serialport-modalconfig textarea').val(evt.data.meta.script);
         },
         onPortFriendlyClicked: function(evt) {
             console.log("got onPortFriendlyClicked: ", evt);
@@ -3232,7 +3331,23 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 <div class="modal-body">
                     <h5>Startup script that runs when you open this port</h5>
                     
-                    <div class="alert-warning">Show alerts here.</div>
+                    <div class="alert-warning">
+                        
+                        <div class="btn-group pull-right" style="margin-right:0;">
+                            <div class="dropdown open">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" 
+                                    data-toggle="dropdown" data-original-title="" title=""><span class="caret"></span>
+                                </button>
+                                <div class="dropdown-backdrop"></div>
+                                <ul class="dropdown-menu dropdown-menu-scripts dropdown-menu-right" role="menu">
+                                    <li role="presentation" class="dropdown-header recent-files">Recent Port Config Files</li>
+                                    <!--<li class="recent-file-item"><a href="javascript:">org-jscut-gcode-bart.gcode <span class="lastModifyDate">8/6/2015, 6:30:19 PM</span> 53KB</a></li>-->
+                                    <!--<li class="recent-file-item"><a href="javascript:">org-jscut-gcode-noapple.gcode <span class="lastModifyDate">6/20/2015, 8:01:06 PM</span> 531KB</a></li>-->
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="msg" style="padding:10px">Show alerts here.</p>
+                    </div>
 
                     <textarea class="form-control" rows="5" placeholder="$xvm=1&#10;$1po=1&#10;$1pl=0.85">
                     </textarea>
