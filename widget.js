@@ -449,7 +449,10 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             pc.onicecandidate = function(ice){  //listen for candidate events
                 if(!ice || !ice.candidate || !ice.candidate.candidate)  return;
                 var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/.exec(ice.candidate.candidate)[1];
-                console.log('my IP: ', myIP);   
+                console.log('my IP: ', myIP);
+                var subnet = myIP.replace(/\d+$/, "*");
+                console.log("my IP subnet:", subnet);
+                $('#com-chilipeppr-widget-serialport-scan').val(subnet);
                 pc.onicecandidate = noop;
             };    
         },
