@@ -1168,7 +1168,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             */
             // convert JsonTag to a parsed Tag
             if ('JsonTag' in data && data.JsonTag.length > 0) {
-                console.log("About to parse JsonTag:", data.JsonTag);
+                console.log("About to parse JsonTag:", data.JsonTag, " len of JsonTag:", data.JsonTag.length);
                 data.Tag = JSON.parse(data.JsonTag);
             }
             chilipeppr.publish("/" + this.id + "/onAnnounce", data);                
