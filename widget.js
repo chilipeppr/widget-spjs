@@ -1223,7 +1223,7 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
             if (this.isWsConnected) {
                 this.conn.send(msg);
             } else {
-                this.publishSysMsg("Tried to send message, but we are not connected to serial port ajax server.");
+                this.publishSysMsg("Tried to send message, but we are not connected to the Serial Port JSON Server.");
             }
         },
         serialSaveCookie: function(portname, baud, isrts, isdtr, buffer) {
