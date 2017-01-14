@@ -359,10 +359,10 @@ cpdefine("inline:com-chilipeppr-widget-serialport", ["chilipeppr_ready", "jquery
         id: "com-chilipeppr-widget-serialport",
         name: "Widget / Serial Port JSON Server",
         desc: "The essential widget if you want your workspace to talk to the Serial Port JSON Server (SPJS). This widget enables numerous pubsub signals so you can publish to SPJS and receive data back when you subscribe to the appropriate signals.",
-        url: "http://raw.githubusercontent.com/chilipeppr/widget-spjs/master/auto-generated-widget.html",       // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
-        fiddleurl: "http://ide.c9.io/chilipeppr/widget-spjs", // The edit URL. This can be auto-filled by runme.js in Cloud9 if you'd like, or just define it on your own to help people know where they can edit/fork your widget
-        githuburl: "http://github.com/chilipeppr/widget-spjs", // The backing github repo
-        testurl: "http://widget-spjs-chilipeppr.c9users.io/widget.html",   // The standalone working widget so can view it working by itself
+        url: "http://raw.githubusercontent.com/robZeilinga/widget-spjs/master/auto-generated-widget.html",       // The final URL of the working widget as a single HTML file with CSS and Javascript inlined. You can let runme.js auto fill this if you are using Cloud9.
+        fiddleurl: "http://ide.c9.io/robzedweb/widget-spjs-robz", // The edit URL. This can be auto-filled by runme.js in Cloud9 if you'd like, or just define it on your own to help people know where they can edit/fork your widget
+        githuburl: "http://github.com/robZeilinga/widget-spjs", // The backing github repo
+        testurl: "http://widget-spjs-robz-robzedweb.c9users.io/widget.html",   // The standalone working widget so can view it working by itself
         publish: {
             '/list' : "Sends the list of serial ports shown in this widget including the connect state so other widgets/elements in ChiliPeppr can use the list including knowing what serial ports to send/recv from. Send in /getList and get back a /list with the JSON payload of the list.", 
             '/listAfterMetaDataAdded' : "Similar to /list but the list will have meta data added to it like an image, or default baud rates, or a modified friendly name. It may even be marked as deleted for dual port scenarios where a port may be considered the 2nd port.", 
@@ -2063,6 +2063,20 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 name: "Arduino Yun",
                 buffer: "default",
                 img: "http://chilipeppr.com/img/boards/yun.jpg"
+            },
+            "mega2560" : {
+                vidpids: [{vid:"2341", pid:"0042"}],
+                //regexp: /arduino mega2560/i,
+                name: "Arduino Mega2560",
+                buffer: "default",
+                img: "http://chilipeppr.com/img/boards/mega.jpg"
+            },
+            "mega2560Clone" : {
+                vidpids: [{vid:"1A86", pid:"7523"}],
+                //regexp: /arduino mega2560 clone/i,
+                name: "Mega2560 Clone CH340",
+                buffer: "default",
+                img: "http://chilipeppr.com/img/boards/megaCh340.jpg"
             },
             "nodemcu" : {
                 vidpids: [{vid:"10c4", pid:"ea60"}],

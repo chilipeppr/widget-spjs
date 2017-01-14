@@ -1853,6 +1853,20 @@ chilipeppr.publish("/com-chilipeppr-widget-serialport/send", "G1 X10 F500\\n");
                 buffer: "default",
                 img: "http://chilipeppr.com/img/boards/yun.jpg"
             },
+            "mega2560" : {
+                vidpids: [{vid:"2341", pid:"0042"}],
+                //regexp: /arduino mega2560/i,
+                name: "Arduino Mega2560",
+                buffer: "default",
+                img: "http://chilipeppr.com/img/boards/mega.jpg"
+            },
+            "mega2560Clone" : {
+                vidpids: [{vid:"1A86", pid:"7523"}],
+                //regexp: /arduino mega2560 clone/i,
+                name: "Mega2560 Clone CH340",
+                buffer: "default",
+                img: "http://chilipeppr.com/img/boards/megaCh340.jpg"
+            },
             "nodemcu" : {
                 vidpids: [{vid:"10c4", pid:"ea60"}],
                 name: "NodeMCU / CP2102",
